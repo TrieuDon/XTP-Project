@@ -4,14 +4,12 @@ function getAll() {
   axios
     .get(`${api}/list`)
     .then(function (response) {
-      console.log(response);
       let data = response.data;
-      console.log(data);
       function myFunction(data) {
         list.innerHTML += `<tr>
                             <td>${data._id}</td>
                             <td>${data.name}</td>
-                              <td><button type="button" class="btn btn-primary" >Edit</button>
+                              <td><button type="button" onclick="updateData(${data._id})" class="btn btn-primary" >Edit</button>
                               <button type="button" class="btn btn-danger" onclick="deleteData(${data._id})">DELETE</button></td>
                           </tr>`;
       }
@@ -25,7 +23,7 @@ function getAll() {
 getAll();
 function deleteData(id) {
   axios
-    .delete(`${api}/delete/${id}`)
+    .post(`${api}/delete/${id}`)
     .then(function (response) {
       console.log(response);
       window.location.href = "./fech-API.html";
@@ -33,9 +31,6 @@ function deleteData(id) {
     .catch(function (error) {
       // handle error
       console.log(error);
-    })
-    .then(function () {
-      // always executed
     });
 }
 function detailData() {
@@ -52,14 +47,11 @@ function detailData() {
     .catch(function (error) {
       // handle error
       console.log(error);
-    })
-    .then(function () {
-      // always executed
     });
 }
 detailData();
 function newData() {
-  let btn_button = document.getElementById("btn-button").value;
+  let btn_button = document.getElementById("btn-button");
   axios
     .post(`${api}/create`, {
       name: btn_button.value,
@@ -72,8 +64,19 @@ function newData() {
     .catch(function (error) {
       // handle error
       console.log(error);
+    });
+}
+function updateData(id) {
+  let btn_button = document.getElementById("btn-button");
+  axios
+    .post(`${api}/update?id=${id}`, {
+      name: btn_button.value,
     })
-    .then(function () {
-      // always executed
+    .then(function (response) {
+      window.location.href = "./fech-API.html";
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
     });
 }
